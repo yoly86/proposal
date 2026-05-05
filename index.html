@@ -236,7 +236,7 @@
                         margin:       0.5,
                         filename:     finalFileName,
                         image:        { type: 'jpeg', quality: 0.98 },
-                        html2canvas:  { scale: 2, useCORS: true },
+                        html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
                         jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
                     };
 
@@ -458,10 +458,15 @@
                                 className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm"
                                 value={orderData.orderName} onChange={e => updateOrder('orderName', e.target.value)} />
                             
-                            {/* Updated to date input */}
-                            <input type="date" placeholder="Date Required"
-                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm text-slate-500"
-                                value={orderData.dateRequired} onChange={e => updateOrder('dateRequired', e.target.value)} />
+                            <input 
+                                type={orderData.dateRequired ? "date" : "text"} 
+                                placeholder="Order due date"
+                                className={`w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm transition-colors ${orderData.dateRequired ? 'text-slate-900' : 'text-slate-400'}`}
+                                onFocus={(e) => e.currentTarget.type = 'date'}
+                                onBlur={(e) => { if (!e.currentTarget.value) e.currentTarget.type = 'text'; }}
+                                value={orderData.dateRequired} 
+                                onChange={e => updateOrder('dateRequired', e.target.value)} 
+                            />
                             
                             {/* Hidden Image Input */}
                             <input type="file" accept="image/*" style={{ display: 'none' }} ref={imageInputRef} onChange={handleImageUpload} />
@@ -973,7 +978,7 @@
                             <div className="mb-8 break-inside-avoid">
                                 <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 pb-2 mb-3">Design Mockup</h3>
                                 <div>
-                                    <img src={orderData.mockupImage} alt="Design Mockup" className="w-48 h-48 object-contain border border-slate-200 rounded-lg p-1 shadow-sm bg-slate-50" />
+                                    <img src={orderData.mockupImage} alt="Design Mockup" className="object-contain border border-slate-200 rounded-lg p-1 shadow-sm bg-slate-50" style={{ maxHeight: '2in', width: 'auto' }} />
                                 </div>
                             </div>
                         )}
