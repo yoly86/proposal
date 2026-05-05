@@ -458,15 +458,20 @@
                                 className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm"
                                 value={orderData.orderName} onChange={e => updateOrder('orderName', e.target.value)} />
                             
-                            <input 
-                                type={orderData.dateRequired ? "date" : "text"} 
-                                placeholder="Order due date"
-                                className={`w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm transition-colors ${orderData.dateRequired ? 'text-slate-900' : 'text-slate-400'}`}
-                                onFocus={(e) => e.currentTarget.type = 'date'}
-                                onBlur={(e) => { if (!e.currentTarget.value) e.currentTarget.type = 'text'; }}
-                                value={orderData.dateRequired} 
-                                onChange={e => updateOrder('dateRequired', e.target.value)} 
-                            />
+                            {/* Updated: CSS trick for custom placeholder so the native mobile calendar always triggers */}
+                            <div className="relative">
+                                <input 
+                                    type="date" 
+                                    className={`w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm transition-colors ${orderData.dateRequired ? 'text-slate-900' : 'text-transparent'}`}
+                                    value={orderData.dateRequired} 
+                                    onChange={e => updateOrder('dateRequired', e.target.value)} 
+                                />
+                                {!orderData.dateRequired && (
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400 pointer-events-none">
+                                        Order due date
+                                    </span>
+                                )}
+                            </div>
                             
                             {/* Hidden Image Input */}
                             <input type="file" accept="image/*" style={{ display: 'none' }} ref={imageInputRef} onChange={handleImageUpload} />
