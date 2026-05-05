@@ -969,14 +969,18 @@
                         )}
 
                         {/* Mockup Image Display */}
-                        {orderData.mockupImage && (
-                            <div className="mb-8 break-inside-avoid">
-                                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 pb-2 mb-3">Design Mockup</h3>
-                                <div>
-                                    <img src={orderData.mockupImage} alt="Design Mockup" className="w-48 h-48 object-contain border border-slate-200 rounded-lg p-1 shadow-sm bg-slate-50" />
-                                </div>
-                            </div>
-                        )}
+                            {orderData.mockupImage && (
+                                <div className="mb-8 break-inside-avoid">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 pb-2 mb-3">Design Mockup</h3>
+        <div>
+            <img src={orderData.mockupImage} 
+                alt="Design Mockup" 
+                className="border border-slate-200 rounded-lg p-1 shadow-sm bg-slate-50" 
+                style={{ maxHeight: '2in', width: 'auto', objectFit: 'contain' }}
+            />
+        </div>
+    </div>
+)}
 
                         <div className="no-print flex flex-col md:flex-row gap-4 mb-8">
                             <button onClick={() => handlePrint('proposal')} className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg shadow-md flex items-center justify-center gap-2 transition-colors">
