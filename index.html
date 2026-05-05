@@ -14,7 +14,7 @@
 
     <style>
         /* Prevent auto-zoom on iOS Safari */
-        input[type="text"], input[type="number"], select, textarea {
+        input[type="text"], input[type="number"], input[type="date"], select, textarea {
             font-size: 16px !important;
         }
         /* Add padding for main content to clear the fixed bottom nav */
@@ -24,7 +24,17 @@
         
         /* Print Styles for PDF Generation & Native Print/Screenshot */
         @media print {
-            body { background-color: white !important; }
+            /* This removes the browser's default headers and footers (which contain the file URL) */
+            @page {
+                margin: 0;
+            }
+            
+            /* Add a standard margin back to the body so your content doesn't touch the paper edge */
+            body { 
+                background-color: white !important; 
+                margin: 1cm !important;
+            }
+
             .no-print { display: none !important; }
             .print-full-width { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
             .print-no-shadow { box-shadow: none !important; border: none !important; }
@@ -447,8 +457,10 @@
                             <input type="text" placeholder="Order Name (e.g. Summer Staff Gear)"
                                 className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm"
                                 value={orderData.orderName} onChange={e => updateOrder('orderName', e.target.value)} />
-                            <input type="text" placeholder="Date Required"
-                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm"
+                            
+                            {/* Updated to date input */}
+                            <input type="date" placeholder="Date Required"
+                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm text-slate-500"
                                 value={orderData.dateRequired} onChange={e => updateOrder('dateRequired', e.target.value)} />
                             
                             {/* Hidden Image Input */}
