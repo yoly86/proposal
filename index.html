@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pro Hybrid Quoter</title>
     
-    <!-- React, ReactDOM, Babel, Tailwind CSS, and html2pdf -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -72,7 +71,8 @@
                 download: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
                 save: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>,
                 upload: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>,
-                image: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                image: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>,
+                copy: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             };
             return icons[name] || null;
         };
@@ -98,28 +98,55 @@
         };
 
         const DTF_SIZES = [
+            { id: 'xs', label: 'Extra Small / Hat (2.5"x2.5")' },
             { id: 'small', label: 'Small / Left Chest (4"x4")' },
             { id: 'medium', label: 'Mid-size / Youth (8"x8")' },
             { id: 'sleeve', label: 'Sleeve / Long Strip' },
             { id: 'large', label: 'Standard Full Back (11"x11")' },
-            { id: 'xlarge', label: 'Oversized (13"x16")' }
+            { id: 'xlarge', label: 'Oversized (13"x16")' },
+            { id: 'jumbo', label: 'Jumbo (16"x20")' }
         ];
 
-        const SIZES_LIST = ['S', 'M', 'L', 'XL', '2X', '3X', '4X', '5X'];
+        const PLACEMENTS = [
+            { id: 'custom', label: 'Custom / Other' },
+            { id: 'fc', label: 'Front - Center Chest' },
+            { id: 'lc', label: 'Front - Left Chest (Wearer\'s Left)' },
+            { id: 'rc', label: 'Front - Right Chest' },
+            { id: 'bc', label: 'Back - Center' },
+            { id: 'sleeve_l', label: 'Left Sleeve' },
+            { id: 'sleeve_r', label: 'Right Sleeve' },
+            { id: 'hat_front', label: 'Hat - Front Center' },
+            { id: 'hat_left', label: 'Hat - Left Panel' },
+            { id: 'hat_right', label: 'Hat - Right Panel' },
+            { id: 'hat_back', label: 'Hat - Back Arch' }
+        ];
 
-        const DTF_PRIMARY_FEES = { small: 11.33, medium: 16.00, sleeve: 19.50, large: 22.00, xlarge: 28.00 };
-        const DTF_SECONDARY_FEES = { small: 4.50, medium: 8.00, sleeve: 10.50, large: 12.00, xlarge: 15.00 };
+        const SIZES_LIST = ['XS', 'S', 'M', 'L', 'XL', '2X', '3X', '4X', '5X'];
+
+        // Expanded pricing for new sizes
+        const DTF_PRIMARY_FEES = { xs: 8.00, small: 11.33, medium: 16.00, sleeve: 19.50, large: 22.00, xlarge: 28.00, jumbo: 35.00 };
+        const DTF_SECONDARY_FEES = { xs: 3.50, small: 4.50, medium: 8.00, sleeve: 10.50, large: 12.00, xlarge: 15.00, jumbo: 20.00 };
         
         const DTF_MATERIAL_COSTS = { 
+            xs: 0.35,
             small: 0.67,
             medium: 2.67,
             sleeve: 1.75,
             large: 5.04,
-            xlarge: 8.67
+            xlarge: 8.67,
+            jumbo: 12.50
         };
 
         const genId = () => Math.random().toString(36).substr(2, 9);
         const formatCurrency = (val) => '$' + (val || 0).toFixed(2);
+
+        // Helper to generate empty sizes object
+        const generateEmptySizes = () => {
+            return SIZES_LIST.reduce((acc, size) => {
+                acc[size] = '';
+                return acc;
+            }, {});
+        };
 
         // --- MAIN APP COMPONENT ---
         function App() {
@@ -134,9 +161,9 @@
             // Line Items State
             const [items, setItems] = useState([
                 {
-                    id: genId(), name: '', qty: 1, rawCost: '', shippingCost: '1.00', margin: 35,
-                    sizes: { S: '', M: '', L: '', XL: '', '2X': '', '3X': '', '4X': '', '5X': '' },
-                    locations: [ { id: genId(), type: 'none', stitches: '', dtfSize: 'small', desc: '', isPuff: false, puffMarkup: 5, adjustment: '' } ]
+                    id: genId(), name: '', color: '', qty: 1, rawCost: '', shippingCost: '1.00', margin: 35,
+                    sizes: generateEmptySizes(),
+                    locations: [ { id: genId(), type: 'none', placement: 'custom', stitches: '', dtfSize: 'small', desc: '', isPuff: false, puffMarkup: 5, adjustment: '' } ]
                 }
             ]);
 
@@ -170,7 +197,7 @@
 
             const addLocation = (itemId) => {
                 setItems(items.map(item => item.id === itemId ? 
-                    { ...item, locations: [...item.locations, { id: genId(), type: 'none', stitches: '', dtfSize: 'small', desc: '', isPuff: false, puffMarkup: 5, adjustment: '' }] } : item));
+                    { ...item, locations: [...item.locations, { id: genId(), type: 'none', placement: 'custom', stitches: '', dtfSize: 'small', desc: '', isPuff: false, puffMarkup: 5, adjustment: '' }] } : item));
             };
 
             const updateLocation = (itemId, locId, field, value) => {
@@ -185,10 +212,19 @@
 
             const addItem = () => {
                 setItems([...items, {
-                    id: genId(), name: '', qty: 1, rawCost: '', shippingCost: '1.00', margin: 35,
-                    sizes: { S: '', M: '', L: '', XL: '', '2X': '', '3X': '', '4X': '', '5X': '' },
-                    locations: [ { id: genId(), type: 'none', stitches: '', dtfSize: 'small', desc: '', isPuff: false, puffMarkup: 5, adjustment: '' } ]
+                    id: genId(), name: '', color: '', qty: 1, rawCost: '', shippingCost: '1.00', margin: 35,
+                    sizes: generateEmptySizes(),
+                    locations: [ { id: genId(), type: 'none', placement: 'custom', stitches: '', dtfSize: 'small', desc: '', isPuff: false, puffMarkup: 5, adjustment: '' } ]
                 }]);
+            };
+            
+            const duplicateItem = (itemToCopy) => {
+                const newItem = {
+                    ...JSON.parse(JSON.stringify(itemToCopy)), 
+                    id: genId(), 
+                    locations: itemToCopy.locations.map(loc => ({ ...loc, id: genId() }))
+                };
+                setItems([...items, newItem]);
             };
 
             const removeItem = (itemId) => {
@@ -292,7 +328,21 @@
                         const importedData = JSON.parse(e.target.result);
                         if (importedData.orderData && importedData.items) {
                             setOrderData(importedData.orderData);
-                            setItems(importedData.items);
+                            
+                            // Ensure backward compatibility with older save files that might not have the new sizes
+                            const updatedItems = importedData.items.map(item => {
+                                const fullSizes = generateEmptySizes();
+                                if (item.sizes) {
+                                    Object.keys(item.sizes).forEach(key => {
+                                        if (fullSizes.hasOwnProperty(key)) {
+                                            fullSizes[key] = item.sizes[key];
+                                        }
+                                    });
+                                }
+                                return { ...item, sizes: fullSizes };
+                            });
+                            
+                            setItems(updatedItems);
                             alert('Quote loaded successfully!');
                         } else {
                             alert('Invalid file format. Missing quote data.');
@@ -458,7 +508,6 @@
                                 className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm"
                                 value={orderData.orderName} onChange={e => updateOrder('orderName', e.target.value)} />
                             
-                            {/* Updated to date input */}
                             <input type="date" placeholder="Date Required"
                                 className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm text-slate-500"
                                 value={orderData.dateRequired} onChange={e => updateOrder('dateRequired', e.target.value)} />
@@ -506,21 +555,32 @@
                                 <h3 className="font-bold flex items-center gap-2">
                                     <Icon name="shirt" size={18} /> Garment Style {index + 1}
                                 </h3>
-                                {items.length > 1 && (
-                                    <button onClick={() => removeItem(item.id)} className="text-slate-400 hover:text-red-400 transition-colors p-1">
-                                        <Icon name="trash" size={18} />
+                                <div className="flex items-center gap-2">
+                                    <button onClick={() => duplicateItem(item)} className="text-slate-400 hover:text-indigo-400 transition-colors p-1" title="Duplicate Garment">
+                                        <Icon name="copy" size={18} />
                                     </button>
-                                )}
+                                    {items.length > 1 && (
+                                        <button onClick={() => removeItem(item.id)} className="text-slate-400 hover:text-red-400 transition-colors p-1" title="Remove Garment">
+                                            <Icon name="trash" size={18} />
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                             
                             <div className="p-5">
                                 <div className="flex flex-col gap-4 mb-5">
                                     <div className="flex flex-col md:flex-row gap-4">
-                                        <div className="flex-[3]">
+                                        <div className="flex-[2]">
                                             <label className="block text-xs font-semibold text-slate-500 mb-1 uppercase">Item Description</label>
-                                            <input type="text" placeholder="e.g. Gildan 5000 Black"
+                                            <input type="text" placeholder="e.g. Gildan 5000"
                                                 className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm font-medium"
                                                 value={item.name} onChange={e => updateItem(item.id, 'name', e.target.value)} />
+                                        </div>
+                                        <div className="flex-1">
+                                            <label className="block text-xs font-semibold text-slate-500 mb-1 uppercase">Color</label>
+                                            <input type="text" placeholder="e.g. Black"
+                                                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm font-medium"
+                                                value={item.color || ''} onChange={e => updateItem(item.id, 'color', e.target.value)} />
                                         </div>
                                         <div className="flex-1">
                                             <label className="block text-xs font-semibold text-slate-500 mb-1 uppercase">Total Qty</label>
@@ -588,7 +648,7 @@
                                                 </button>
                                             )}
                                             
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2 pr-6">
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-2 pr-6">
                                                 <div>
                                                     <label className="block text-[10px] text-slate-500 mb-1">Type</label>
                                                     <select className="w-full p-2 bg-slate-50 border border-slate-200 rounded text-sm outline-none focus:ring-1 focus:ring-indigo-500"
@@ -599,6 +659,14 @@
                                                     </select>
                                                 </div>
                                                 
+                                                <div>
+                                                    <label className="block text-[10px] text-slate-500 mb-1">Placement</label>
+                                                    <select className="w-full p-2 bg-slate-50 border border-slate-200 rounded text-sm outline-none focus:ring-1 focus:ring-indigo-500"
+                                                        value={loc.placement || 'custom'} onChange={e => updateLocation(item.id, loc.id, 'placement', e.target.value)}>
+                                                        {PLACEMENTS.map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
+                                                    </select>
+                                                </div>
+
                                                 {loc.type === 'embroidery' && (
                                                     <div>
                                                         <label className="block text-[10px] text-slate-500 mb-1">Est. Stitches</label>
@@ -627,7 +695,7 @@
                                                 
                                                 {loc.type === 'dtf' && (
                                                     <div>
-                                                        <label className="block text-[10px] text-slate-500 mb-1">Size {loc.isFirstDtf ? '(Primary Price)' : '(Secondary Price)'}</label>
+                                                        <label className="block text-[10px] text-slate-500 mb-1">Size {loc.isFirstDtf ? '(Primary)' : '(Secondary)'}</label>
                                                         <select className="w-full p-2 bg-slate-50 border border-slate-200 rounded text-sm outline-none focus:ring-1 focus:ring-indigo-500"
                                                             value={loc.dtfSize} onChange={e => updateLocation(item.id, loc.id, 'dtfSize', e.target.value)}>
                                                             {DTF_SIZES.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
@@ -639,8 +707,8 @@
                                             {loc.type !== 'none' && (
                                                 <div className="grid grid-cols-12 gap-3 mt-2">
                                                     <div className="col-span-8 md:col-span-9">
-                                                        <label className="block text-[10px] text-slate-500 mb-1">Description / Notes</label>
-                                                        <input type="text" placeholder="e.g. Left Chest Logo (Red/White)"
+                                                        <label className="block text-[10px] text-slate-500 mb-1">Description / Colors / Notes</label>
+                                                        <input type="text" placeholder="e.g. Logo (Red/White)"
                                                             className="w-full p-2 bg-slate-50 border border-slate-200 rounded text-sm outline-none focus:ring-1 focus:ring-indigo-500"
                                                             value={loc.desc} onChange={e => updateLocation(item.id, loc.id, 'desc', e.target.value)} />
                                                     </div>
@@ -905,7 +973,7 @@
                                 <div key={item.id} className="bg-slate-50 border border-slate-200 rounded-lg p-4">
                                     <div className="flex justify-between items-start mb-2 border-b border-slate-200 pb-2">
                                         <div>
-                                            <h4 className="font-bold text-slate-800">{idx + 1}. {item.name || 'Unnamed Item'} (Qty: {item.calculatedQty})</h4>
+                                            <h4 className="font-bold text-slate-800">{idx + 1}. {item.name || 'Unnamed Item'} {item.color ? `(${item.color})` : ''} (Qty: {item.calculatedQty})</h4>
                                             {sizeStr && <p className="text-[10px] font-bold text-slate-500 mt-0.5">{sizeStr}</p>}
                                         </div>
                                         <span className="font-bold text-indigo-700">{formatCurrency(item.lineTotal)} Retail</span>
@@ -969,18 +1037,18 @@
                         )}
 
                         {/* Mockup Image Display */}
-                            {orderData.mockupImage && (
-                                <div className="mb-8 break-inside-avoid">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 pb-2 mb-3">Design Mockup</h3>
-        <div>
-            <img src={orderData.mockupImage} 
-                alt="Design Mockup" 
-                className="border border-slate-200 rounded-lg p-1 shadow-sm bg-slate-50" 
-                style={{ maxHeight: '2in', width: 'auto', objectFit: 'contain' }}
-            />
-        </div>
-    </div>
-)}
+                        {orderData.mockupImage && (
+                            <div className="mb-8 break-inside-avoid">
+                                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 pb-2 mb-3">Design Mockup</h3>
+                                <div>
+                                    <img src={orderData.mockupImage} 
+                                        alt="Design Mockup" 
+                                        className="border border-slate-200 rounded-lg p-1 shadow-sm bg-slate-50" 
+                                        style={{ maxHeight: '2in', width: 'auto', objectFit: 'contain' }}
+                                    />
+                                </div>
+                            </div>
+                        )}
 
                         <div className="no-print flex flex-col md:flex-row gap-4 mb-8">
                             <button onClick={() => handlePrint('proposal')} className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg shadow-md flex items-center justify-center gap-2 transition-colors">
@@ -1007,7 +1075,7 @@
                                     <div className="grid grid-cols-12 gap-4 items-start">
                                         <div className="col-span-6">
                                             <p className="font-bold text-slate-800 text-lg">
-                                                {item.name || 'Garment Item'}
+                                                {item.name || 'Garment Item'} {item.color ? `- ${item.color}` : ''}
                                                 {item.validPlacementCount > 0 && (
                                                     <span className="text-sm font-normal text-slate-500 ml-2">({item.validPlacementCount} Placement{item.validPlacementCount !== 1 ? 's' : ''})</span>
                                                 )}
@@ -1021,6 +1089,7 @@
                                                         <span className="font-semibold text-slate-700">
                                                             {loc.type === 'embroidery' ? (loc.isPuff ? '3D Puff Embroidery' : 'Standard Embroidery') : 'DTF Print'}
                                                         </span>
+                                                        {loc.placement && loc.placement !== 'custom' ? ` - ${PLACEMENTS.find(p => p.id === loc.placement)?.label}` : ''}
                                                         {loc.desc ? ` - ${loc.desc}` : ''}
                                                         {(parseFloat(loc.adjustment) < 0) && (
                                                             <span className="text-emerald-600 font-medium italic ml-1 text-[11px]">
