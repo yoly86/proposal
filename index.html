@@ -63,7 +63,9 @@
                 save: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>,
                 upload: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>,
                 image: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>,
-                copy: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                copy: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>,
+                chevronDown: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="6 9 12 15 18 9"></polyline></svg>,
+                chevronUp: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="18 15 12 9 6 15"></polyline></svg>
             };
             return icons[name] || null;
         };
@@ -131,9 +133,15 @@
         // --- MAIN APP COMPONENT ---
         function App() {
             const [activeTab, setActiveTab] = useState('build');
+            const [showBusinessDetails, setShowBusinessDetails] = useState(false);
 
             // Order-Level State
             const [orderData, setOrderData] = useState({
+                businessName: '',
+                businessAddress: '',
+                businessPhone: '',
+                businessEmail: '',
+                businessWebsite: '',
                 customerName: '', orderName: '', dateRequired: '', orderDescription: '', designNotes: '', mockupImage: null,
                 setupFees: '', digitizingFee: '', digitizingCost: '', taxRate: 5, discount: '', machineReservePercent: '5', amountPaid: '', receiptNotes: '' 
             });
@@ -485,6 +493,42 @@
 
             const renderBuildTab = () => (
                 <div className="space-y-6 pb-20 no-print">
+                    <div className="bg-white rounded-xl shadow-sm p-5 border border-slate-200">
+                        <button 
+                            onClick={() => setShowBusinessDetails(!showBusinessDetails)}
+                            className="w-full flex items-center justify-between outline-none cursor-pointer group"
+                        >
+                            <h2 className="text-sm font-bold text-slate-700 flex items-center gap-2 uppercase tracking-wider group-hover:text-indigo-600 transition-colors">
+                                <Icon name="fileText" size={18} className="text-indigo-500" /> Your Business Details
+                            </h2>
+                            <div className="text-slate-400 group-hover:text-indigo-500 transition-colors bg-slate-50 p-1 rounded-full">
+                                {showBusinessDetails ? <Icon name="chevronUp" size={16} /> : <Icon name="chevronDown" size={16} />}
+                            </div>
+                        </button>
+                        
+                        {showBusinessDetails && (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-slate-100">
+                                <input type="text" placeholder="Business Name"
+                                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm"
+                                    value={orderData.businessName} onChange={e => updateOrder('businessName', e.target.value)} />
+                                <input type="text" placeholder="Address / City"
+                                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm"
+                                    value={orderData.businessAddress} onChange={e => updateOrder('businessAddress', e.target.value)} />
+                                <input type="text" placeholder="Phone Number"
+                                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm"
+                                    value={orderData.businessPhone} onChange={e => updateOrder('businessPhone', e.target.value)} />
+                                <input type="text" placeholder="Email Address"
+                                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm"
+                                    value={orderData.businessEmail} onChange={e => updateOrder('businessEmail', e.target.value)} />
+                                <div className="md:col-span-2">
+                                    <input type="text" placeholder="Website"
+                                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm"
+                                        value={orderData.businessWebsite} onChange={e => updateOrder('businessWebsite', e.target.value)} />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
                     <div className="bg-white rounded-xl shadow-sm p-5 border border-slate-200">
                         <h2 className="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2 uppercase tracking-wider">
                             <Icon name="user" size={18} className="text-indigo-500" /> Order Details
@@ -1002,6 +1046,16 @@
                             <div>
                                 <h1 className="text-4xl font-black tracking-tighter text-slate-900">PROPOSAL</h1>
                                 <p className="text-slate-500 font-medium mt-1">Date: {new Date().toLocaleDateString()}</p>
+                                
+                                {(orderData.businessName || orderData.businessAddress || orderData.businessPhone || orderData.businessEmail || orderData.businessWebsite) && (
+                                    <div className="mt-4 pt-4 border-t border-slate-200 text-sm text-slate-600 space-y-0.5">
+                                        {orderData.businessName && <p className="font-bold text-slate-800">{orderData.businessName}</p>}
+                                        {orderData.businessAddress && <p>{orderData.businessAddress}</p>}
+                                        {orderData.businessPhone && <p>{orderData.businessPhone}</p>}
+                                        {orderData.businessEmail && <p>{orderData.businessEmail}</p>}
+                                        {orderData.businessWebsite && <p>{orderData.businessWebsite}</p>}
+                                    </div>
+                                )}
                             </div>
                             <div className="text-right">
                                 <h2 className="text-xl font-bold text-slate-800">{orderData.customerName || 'Customer Name'}</h2>
@@ -1133,6 +1187,16 @@
                             <div>
                                 <h1 className="text-4xl font-black tracking-tighter text-slate-900">FINAL INVOICE</h1>
                                 <p className="text-slate-500 font-medium mt-1">Date: {new Date().toLocaleDateString()}</p>
+                                
+                                {(orderData.businessName || orderData.businessAddress || orderData.businessPhone || orderData.businessEmail || orderData.businessWebsite) && (
+                                    <div className="mt-4 pt-4 border-t border-slate-200 text-sm text-slate-600 space-y-0.5">
+                                        {orderData.businessName && <p className="font-bold text-slate-800">{orderData.businessName}</p>}
+                                        {orderData.businessAddress && <p>{orderData.businessAddress}</p>}
+                                        {orderData.businessPhone && <p>{orderData.businessPhone}</p>}
+                                        {orderData.businessEmail && <p>{orderData.businessEmail}</p>}
+                                        {orderData.businessWebsite && <p>{orderData.businessWebsite}</p>}
+                                    </div>
+                                )}
                             </div>
                             <div className="text-right">
                                 <h2 className="text-xl font-bold text-slate-800">{orderData.customerName || 'Customer Name'}</h2>
@@ -1254,6 +1318,16 @@
                             <div>
                                 <h1 className="text-4xl font-black tracking-tighter text-slate-900">RECEIPT</h1>
                                 <p className="text-slate-500 font-medium mt-1">Date: {new Date().toLocaleDateString()}</p>
+                                
+                                {(orderData.businessName || orderData.businessAddress || orderData.businessPhone || orderData.businessEmail || orderData.businessWebsite) && (
+                                    <div className="mt-4 pt-4 border-t border-slate-200 text-sm text-slate-600 space-y-0.5">
+                                        {orderData.businessName && <p className="font-bold text-slate-800">{orderData.businessName}</p>}
+                                        {orderData.businessAddress && <p>{orderData.businessAddress}</p>}
+                                        {orderData.businessPhone && <p>{orderData.businessPhone}</p>}
+                                        {orderData.businessEmail && <p>{orderData.businessEmail}</p>}
+                                        {orderData.businessWebsite && <p>{orderData.businessWebsite}</p>}
+                                    </div>
+                                )}
                             </div>
                             <div className="text-right mt-16 md:mt-0">
                                 <h2 className="text-xl font-bold text-slate-800">{orderData.customerName || 'Customer Name'}</h2>
